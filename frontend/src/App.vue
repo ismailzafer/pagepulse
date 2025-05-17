@@ -6,7 +6,7 @@
         PagePulse
       </v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn icon href="https://github.com/yourusername/pagepulse" target="_blank">
+      <v-btn icon href="https://github.com/ismailzafer/pagepulse" target="_blank">
         <v-icon>mdi-github</v-icon>
       </v-btn>
     </v-app-bar>
