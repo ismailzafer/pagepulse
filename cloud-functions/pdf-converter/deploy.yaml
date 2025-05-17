@@ -1,0 +1,8 @@
+runtime: python39
+entrypoint: convert_pdf_to_text
+
+environmentVariables:
+  GCP_BUCKET_NAME: "pagepulse-storage"
+
+build:
+  requirementsPath: requirements.txt 
