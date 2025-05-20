@@ -108,6 +108,10 @@
 <script>
 import axios from 'axios'
 
+// Configure axios with base URL
+const API_BASE_URL = 'http://35.187.13.156'
+axios.defaults.baseURL = API_BASE_URL
+
 export default {
   name: 'Home',
   
@@ -144,7 +148,7 @@ export default {
         const formData = new FormData()
         formData.append('file', this.file)
 
-        const response = await axios.post('/api/upload/', formData, {
+        const response = await axios.post('/upload/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -165,7 +169,7 @@ export default {
       if (!this.conversionId) return
 
       try {
-        const response = await axios.get(`/api/status/${this.conversionId}`)
+        const response = await axios.get(`/status/${this.conversionId}`)
         this.status = response.data.status
         
         if (response.data.status === 'completed') {

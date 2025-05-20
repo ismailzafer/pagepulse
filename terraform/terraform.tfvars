@@ -1,0 +1,1 @@
+project_id = "pagepulse-460414"  # Buraya kendi GCP proje ID'nizi yazın 
