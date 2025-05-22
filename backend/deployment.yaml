@@ -12,8 +12,19 @@ spec:
       labels:
         app: backend
     spec:
+      serviceAccountName: default
       containers:
       - name: backend
         image: gcr.io/pagepulse-460414/backend:latest
         ports:
-        - containerPort: 8000 
+        - containerPort: 8000
+        env:
+        - name: GCP_PROJECT
+          value: "pagepulse-460414"
+        - name: GCS_BUCKET_NAME
+          value: "pagepulse-pdf-bucket"
+        - name: PUBSUB_TOPIC
+          value: "pdf-conversion-topic"
+        # Uncomment and set the path if using a service account key file
+        # - name: GOOGLE_APPLICATION_CREDENTIALS
+        #   value: "/path/to/your/service-account.json" 
