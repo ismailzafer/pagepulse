@@ -25,6 +25,8 @@ spec:
           value: "pagepulse-pdf-bucket"
         - name: PUBSUB_TOPIC
           value: "pdf-conversion-topic"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/app/sa-key.json"
         # Uncomment and set the path if using a service account key file
         # - name: GOOGLE_APPLICATION_CREDENTIALS
         #   value: "/path/to/your/service-account.json" 

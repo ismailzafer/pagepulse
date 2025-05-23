@@ -9,6 +9,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application
 COPY . .
 
+# Copy the service account JSON key
+COPY sa-key.json /app/sa-key.json
+
 # Expose the port the app runs on
 EXPOSE 8000
 

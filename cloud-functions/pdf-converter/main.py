@@ -1,39 +1,37 @@
+# cloud-functions/pdf-converter/main.py
 import os
+import io
 from google.cloud import storage
 import PyPDF2
-import io
-import functions_framework
+from flask import Request, abort, jsonify
 
 storage_client = storage.Client()
 
-@functions_framework.http
-def convert_pdf_to_text(request):
-    if request.method != 'POST':
-        return 'Method Not Allowed', 405
+def convert_pdf_to_text(request: Request):
+    # 1) parse JSON body for event data
+    request_json = request.get_json(silent=True)
+    if not request_json:
+        abort(400, "Expected JSON payload")
 
-    if 'file' not in request.files:
-        return 'No file part', 400
+    bucket_name = request_json.get("bucket")
+    pdf_blob_name = request_json.get("name")
+    if not bucket_name or not pdf_blob_name:
+        abort(400, "Missing 'bucket' or 'name' in JSON")
 
-    file = request.files['file']
-    if file.filename == '':
-        return 'No selected file', 400
+    if not pdf_blob_name.endswith(".pdf"):
+        return jsonify({"status": "skipped", "reason": "not a PDF"}), 200
 
-    try:
-        # PDF dosyasını oku
-        pdf_bytes = file.read()
-        pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
-        text_content = ""
-        for page in pdf_reader.pages:
-            text_content += page.extract_text() + "\n"
+    # 2) now do the same processing
+    bucket = storage_client.bucket(bucket_name)
+    pdf_bytes = bucket.blob(pdf_blob_name).download_as_bytes()
+    reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
 
-        # Sonucu GCS'ye kaydet (opsiyonel)
-        bucket_name = os.getenv("BUCKET_NAME", "pagepulse-pdf-bucket")
-        output_blob_path = f"conversions/{file.filename}.txt"
-        bucket = storage_client.bucket(bucket_name)
-        output_blob = bucket.blob(output_blob_path)
-        output_blob.upload_from_string(text_content, content_type="text/plain")
+    text_content = ""
+    for page in reader.pages:
+        text_content += page.extract_text() or ""
 
-        return f"PDF converted and saved as {output_blob_path}", 200
+    file_id = os.path.splitext(os.path.basename(pdf_blob_name))[0]
+    output_blob = bucket.blob(f"conversions/{file_id}.txt")
+    output_blob.upload_from_string(text_content, content_type="text/plain")
 
-    except Exception as e:
-        return f"Error processing PDF: {str(e)}", 500
+    return jsonify({"status": "success", "output": f"conversions/{file_id}.txt"}), 200

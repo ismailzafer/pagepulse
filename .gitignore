@@ -44,4 +44,7 @@ build/
 
 # Local development
 *.log
-.DS_Store 
+.DS_Store
+
+# Service Account Keys
+backend/sa-key.json 

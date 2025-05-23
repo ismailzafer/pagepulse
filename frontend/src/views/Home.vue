@@ -173,7 +173,7 @@ export default {
         this.status = response.data.status
         
         if (response.data.status === 'completed') {
-          this.textUrl = response.data.text_url
+          this.textUrl = API_BASE_URL + response.data.text_url
           this.stopStatusCheck()
         }
       } catch (error) {
