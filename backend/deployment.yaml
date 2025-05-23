@@ -29,4 +29,12 @@ spec:
           value: "/app/sa-key.json"
         # Uncomment and set the path if using a service account key file
         # - name: GOOGLE_APPLICATION_CREDENTIALS
-        #   value: "/path/to/your/service-account.json" 
+        #   value: "/path/to/your/service-account.json"
+        resources:
+          requests:
+            cpu: "2"
+            memory: "8Gi"
+          limits:
+            cpu: "2"
+            memory: "8Gi"
+            ephemeral-storage: 1Gi 
