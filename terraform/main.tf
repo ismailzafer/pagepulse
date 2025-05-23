@@ -18,7 +18,6 @@ resource "google_project_service" "required_apis" {
   for_each = toset([
     "container.googleapis.com",
     "cloudfunctions.googleapis.com",
-    "pubsub.googleapis.com",
     "storage.googleapis.com",
     "compute.googleapis.com"
   ])
@@ -51,11 +50,6 @@ resource "google_storage_bucket" "pdf_bucket" {
   force_destroy = true
 
   uniform_bucket_level_access = true
-}
-
-# Create Pub/Sub topic
-resource "google_pubsub_topic" "pdf_conversion" {
-  name = "pdf-conversion-topic"
 }
 
 # Create Cloud Function
